@@ -45,8 +45,8 @@ class AssetGroup:
         self.business_impact = str(business_impact)
         self.id = int(id)
         self.last_update = str(last_update)
-        self.scanips = scanips
-        self.scandns = scandns
+        self.scanips = scanips #list
+        self.scandns = scandns #list
         self.scanner_appliances = scanner_appliances
         self.title = str(title)
 
@@ -60,6 +60,19 @@ class AssetGroup:
         call = "/api/2.0/fo/asset/group/"
         parameters = {"action": "edit", "id": self.id, "set_ips": ips}
         conn.request(call, parameters)
+
+    def addAssetsDNS(self, conn, dns_names):
+        call = "/api/2.0/fo/asset/group/"
+        parameters = {"action": "edit", "id": self.id, "add_dns_names": ",".join(dns_names)}
+        conn.request(call, parameters)
+        self.scandns.extend(dns_names)
+
+    def removeAssetsDNS(self, conn, dns_names):
+        call = "/api/2.0/fo/asset/group/"
+        parameters = {"action": "edit", "id": self.id, "remove_dns_names": ",".join(dns_names)}
+        conn.request(call, parameters)
+        self.scandns = [d for d in self.scandns if d not in dns_names]
+
 
     def __repr__(self):
         return f"qualys_id: {self.id}, title: {self.title}"
