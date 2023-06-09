@@ -45,8 +45,8 @@ class AssetGroup:
         self.business_impact = str(business_impact)
         self.id = int(id)
         self.last_update = str(last_update)
-        self.scanips = scanips #list
-        self.scandns = scandns #list
+        self.scanips = scanips #list, according to the initial idea of the author
+        self.scandns = scandns #list, according to the initial idea of the author
         self.scanner_appliances = scanner_appliances
         self.title = str(title)
 
@@ -56,22 +56,29 @@ class AssetGroup:
         conn.request(call, parameters)
         self.scanips.append(ip)
 
-    def setAssets(self, conn, ips):
+    def setAssets(self, conn, ips): #the last parameter is a list
         call = "/api/2.0/fo/asset/group/"
-        parameters = {"action": "edit", "id": self.id, "set_ips": ips}
+        parameters = {"action": "edit", "id": self.id, "set_ips": ",".join(ips)}
         conn.request(call, parameters)
+        self.scanips = list(ips)
 
-    def addAssetsDNS(self, conn, dns_names):
+    def addAssetsDNS(self, conn, dns_names): #the last parameter is a list
         call = "/api/2.0/fo/asset/group/"
         parameters = {"action": "edit", "id": self.id, "add_dns_names": ",".join(dns_names)}
         conn.request(call, parameters)
         self.scandns.extend(dns_names)
 
-    def removeAssetsDNS(self, conn, dns_names):
+    def removeAssetsDNS(self, conn, dns_names): #the last parameter is a list
         call = "/api/2.0/fo/asset/group/"
         parameters = {"action": "edit", "id": self.id, "remove_dns_names": ",".join(dns_names)}
         conn.request(call, parameters)
         self.scandns = [d for d in self.scandns if d not in dns_names]
+
+    def setAssetsDNS(self, conn, dns_names): #the last parameter is a list
+        call = "/api/2.0/fo/asset/group/"
+        parameters = {"action": "edit", "id": self.id, "set_dns_names": ",".join(dns_names)}
+        conn.request(call, parameters)
+        self.scandns = list(dns_names)
 
 
     def __repr__(self):

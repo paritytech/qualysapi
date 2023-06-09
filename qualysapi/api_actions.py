@@ -139,7 +139,7 @@ class QGActions:
             scannersArray = []
             try:
                 for scanip in group.SCANIPS.IP:
-                    scanipsArray.append(scanip)
+                    scanipsArray.extend(str(scanip).split(",")) #fixed
             except AttributeError:
                 scanipsArray = []  # No IPs defined to scan.
 
@@ -151,7 +151,7 @@ class QGActions:
 
             try:
                 for dnsName in group.SCANDNS.DNS:
-                    scandnsArray.append(dnsName)
+                    scandnsArray.extend(str(dnsName).split(",")) #fixed
             except AttributeError:
                 scandnsArray = []  # No DNS names assigned to group.
 
